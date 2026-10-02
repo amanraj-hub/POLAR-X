@@ -1,0 +1,10 @@
+{
+  "name": "POLAR-X Expedition Command Center",
+  "short_name": "POLAR-X",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#07111f",
+  "theme_color": "#07111f",
+  "description": "Polar expedition logistics and asset management web application",
+  "icons": []
+}

@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>POLAR-X | Expedition Command</title>
+  <link rel="stylesheet" href="/style.css?v=20261002-cloud">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#07111f">
+</head>
+<body>
+<div id="toast"></div>
+<div id="loginView" class="auth-screen">
+  <div class="login-card">
+    <div class="brand-mark">PX</div>
+    <h1>POLAR-X</h1>
+    <p>Integrated Polar Expedition Logistics & Asset Management</p>
+    <form id="loginForm">
+      <input id="email" type="email" placeholder="Email" value="admin@polarx.local" required>
+      <input id="password" type="password" placeholder="Password" value="Admin@123" required>
+      <button class="primary" type="submit">Enter Command Center</button>
+    </form>
+    <small>Demo: admin@polarx.local / Admin@123</small>
+  </div>
+</div>
+
+<div id="appView" class="app hidden">
+  <aside class="sidebar">
+    <div class="logo"><span>PX</span><div><b>POLAR-X</b><small>COMMAND CENTER</small></div></div>
+    <nav>
+      <button class="nav active" data-page="dashboard">▦ <span>Dashboard</span></button>
+      <button class="nav" data-page="assets">◈ <span>Assets</span></button>
+      <button class="nav" data-page="expeditions">⌁ <span>Expeditions</span></button>
+      <button class="nav" data-page="map">◎ <span>Live Location</span></button>
+      <button class="nav" data-page="telemetry">⌁ <span>IoT Telemetry</span></button>
+      <button class="nav" data-page="reports">⇩ <span>Reports</span></button>
+      <button class="nav" data-page="audit">☷ <span>Audit Log</span></button>
+      <button class="nav" data-page="users">♙ <span>User Management</span></button>
+    </nav>
+    <div class="sidebar-bottom">
+      <div id="userBadge"></div>
+      <button id="passwordBtn" class="ghost">Change password</button><button id="logout" class="ghost">Sign out</button>
+    </div>
+  </aside>
+
+  <main>
+    <header class="topbar">
+      <div>
+        <span class="eyebrow">SMART AUTOMATION</span>
+        <h2 id="pageTitle">Mission Dashboard</h2>
+      </div>
+      <div class="top-actions">
+        <span id="networkStatus" class="status-pill online">● Online</span>
+        <button id="refreshBtn" class="icon-btn">↻</button>
+        <button id="themeBtn" class="icon-btn">☾</button>
+      </div>
+    </header>
+
+    <section id="page-dashboard" class="page">
+      <div class="hero">
+        <div><span class="eyebrow">EXPEDITION OPERATIONS</span><h1>Mission readiness at a glance.</h1><p>One source of truth for planning, inventory, monitoring and reporting.</p></div>
+        <div class="hero-actions">
+  <button id="selfTestBtn" class="primary" type="button">Run Self-Test / Demo</button>
+  <button class="primary" onclick="openForecast()">AI Stock Forecast</button>
+  <button class="ghost" onclick="downloadReport('assets')">Export Assets CSV</button>
+</div>
+      </div>
+      <div id="stats" class="stat-grid"></div>
+      <div class="two-col">
+        <div class="panel"><div class="panel-head"><h3>Operational Alerts</h3><button class="text-btn" onclick="loadDashboard()">Refresh</button></div><div id="alerts"></div></div>
+        <div class="panel"><div class="panel-head"><h3>Recent Expeditions</h3><button class="text-btn" onclick="navigate('expeditions')">View all</button></div><div id="recentExpeditions"></div></div>
+      </div>
+    </section>
+
+    <section id="page-assets" class="page hidden">
+      <div class="page-tools"><div><span class="eyebrow">INVENTORY</span><h1>Asset Registry</h1></div><button id="addAssetBtn" class="primary">+ Add Asset</button></div>
+      <div class="filters"><input id="assetSearch" placeholder="Search asset, code or location…"><select id="assetStatus"><option value="">All statuses</option><option>AVAILABLE</option><option>IN_USE</option><option>MAINTENANCE</option><option>LOST</option></select><select id="assetCategory"><option value="">All categories</option></select></div>
+      <div class="panel table-wrap"><table><thead><tr><th>Code</th><th>Asset</th><th>Category</th><th>Qty</th><th>Status</th><th>Location</th><th>Actions</th></tr></thead><tbody id="assetRows"></tbody></table></div>
+    </section>
+
+    <section id="page-expeditions" class="page hidden">
+      <div class="page-tools"><div><span class="eyebrow">MISSIONS</span><h1>Expedition Control</h1></div><button id="addExpeditionBtn" class="primary">+ New Expedition</button></div>
+      <div class="filters expedition-filters"><input id="expeditionSearch" placeholder="Search expedition, region or leader…"><select id="expeditionStatus"><option value="">All mission statuses</option><option>PLANNED</option><option>ACTIVE</option><option>COMPLETED</option><option>CANCELLED</option></select></div>
+      <div id="expeditionCards" class="cards-grid"></div>
+    </section>
+
+    <section id="page-map" class="page hidden">
+      <div class="page-tools"><div><span class="eyebrow">GPS / IOT</span><h1>Live Location</h1></div><button id="locateBtn" class="primary">Capture My GPS</button></div>
+      <div class="panel location-panel"><div id="coords">Select an expedition and capture its current coordinates.</div><div class="radar"><div class="radar-dot"></div></div><select id="locationExpedition"></select><button id="saveLocationBtn" class="primary">Save Location</button></div>
+    </section>
+
+    <section id="page-audit" class="page hidden">
+      <div class="page-tools"><div><span class="eyebrow">SECURITY</span><h1>Audit Log</h1></div></div>
+      <div class="panel table-wrap"><table><thead><tr><th>Time</th><th>User</th><th>Action</th><th>Entity</th><th>Details</th></tr></thead><tbody id="auditRows"></tbody></table></div>
+    </section>
+
+    <section id="page-users" class="page hidden">
+      <div class="page-tools"><div><span class="eyebrow">ADMINISTRATION</span><h1>User Management</h1><p class="muted">Create team accounts, assign roles and issue temporary credentials.</p></div><button id="addUserBtn" class="primary">+ Create User</button></div>
+      <div class="panel table-wrap"><table><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead><tbody id="userRows"></tbody></table></div>
+    </section>
+    <section id="page-telemetry" class="page hidden">
+      <div class="page-tools"><div><span class="eyebrow">SENSOR NETWORK</span><h1>IoT Telemetry Simulator</h1></div>
+      <div class="telemetry-controls"><select id="telemetryExpedition"></select><select id="sensorType"><option>TEMPERATURE</option><option>BATTERY</option><option>WIND</option><option>PRESSURE</option></select><button id="simulateBtn" class="primary">Simulate Reading</button></div></div>
+      <div class="two-col">
+        <div class="panel"><h3>Latest readings</h3><div id="telemetryRows"></div></div>
+        <div class="panel"><h3>Mission telemetry</h3><div class="telemetry-gauge"><div id="telemetryValue">--</div><small>Latest sensor value</small></div></div>
+      </div>
+    </section>
+
+    <section id="page-reports" class="page hidden">
+      <div class="page-tools"><div><span class="eyebrow">REPORTING</span><h1>Mission Reports</h1></div></div>
+      <div class="cards-grid">
+        <div class="exp-card"><span class="eyebrow">INVENTORY</span><h3>Asset Register</h3><p>Download the current asset registry as CSV for logistics analysis.</p><button class="primary" onclick="downloadReport('assets')">Download CSV</button></div>
+        <div class="exp-card"><span class="eyebrow">MISSIONS</span><h3>Expedition Report</h3><p>Export expedition status, dates and GPS coordinates.</p><button class="primary" onclick="downloadReport('expeditions')">Download CSV</button></div>
+        <div class="exp-card"><span class="eyebrow">ANALYTICS</span><h3>Stock Forecast</h3><p>Review transparent stock-risk estimates and recommended replenishment.</p><button class="primary" onclick="openForecast()">Open Forecast</button></div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+
+<div id="modal" class="modal hidden"><div class="modal-card"><div class="modal-head"><h3 id="modalTitle"></h3><button id="closeModal">×</button></div><div id="modalBody"></div></div></div>
+<script src="/app.js?v=20261002-cloud"></script>
+<script>if("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js?v=20261002-cloud").catch(()=>{});</script>
+</body>
+</html>
