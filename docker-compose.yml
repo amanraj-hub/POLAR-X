@@ -1,0 +1,16 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: polar-x-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: polar_x
+      MYSQL_USER: polarx
+      MYSQL_PASSWORD: polarx_password
+      MYSQL_ROOT_PASSWORD: root_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - polarx_mysql:/var/lib/mysql
+volumes:
+  polarx_mysql:
