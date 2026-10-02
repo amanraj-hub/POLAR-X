@@ -105,7 +105,35 @@ async function simulateTelemetry(){
   const r=await api("/api/telemetry/simulate",{method:"POST",body:JSON.stringify({expedition_id:$("telemetryExpedition").value,sensor_type:$("sensorType").value})});
   if(!r.queued){await loadTelemetry();toast("Telemetry reading received.");}
 }
-function downloadReport(kind){window.open(`/api/reports/${kind}.csv`,"_blank");}
+async function downloadReport(kind){
+  if(!state.token){ toast("Please sign in again before downloading a report."); showLogin(); return; }
+  try{
+    const res=await fetch(`/api/reports/${kind}.csv`,{
+      method:"GET",
+      headers:{Authorization:`Bearer ${state.token}`}
+    });
+    if(res.status===401){
+      state.token=null; state.user=null;
+      localStorage.removeItem("px_token"); localStorage.removeItem("px_user");
+      showLogin();
+      throw new Error("Your session expired. Please sign in again.");
+    }
+    if(!res.ok){
+      const data=await res.json().catch(()=>({}));
+      throw new Error(data.error || `Report download failed (${res.status})`);
+    }
+    const blob=await res.blob();
+    const url=URL.createObjectURL(blob);
+    const link=document.createElement("a");
+    link.href=url;
+    link.download=`polar-x-${kind}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+    toast("CSV downloaded successfully.");
+  }catch(err){toast(err.message)}
+}
 
 async function boot(){
   if(!state.token){showLogin();return}

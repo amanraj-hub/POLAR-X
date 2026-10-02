@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>POLAR-X | Expedition Command</title>
-  <link rel="stylesheet" href="/style.css?v=20261002-cloud">
+  <link rel="stylesheet" href="/style.css?v=20261002-cloud3">
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#07111f">
 </head>
@@ -15,12 +15,12 @@
     <div class="brand-mark">PX</div>
     <h1>POLAR-X</h1>
     <p>Integrated Polar Expedition Logistics & Asset Management</p>
-    <form id="loginForm">
-      <input id="email" type="email" placeholder="Email" value="admin@polarx.local" required>
-      <input id="password" type="password" placeholder="Password" value="Admin@123" required>
+    <form id="loginForm" autocomplete="off">
+      <input id="email" type="email" name="email" placeholder="Email" autocomplete="username" required>
+      <input id="password" type="password" name="password" placeholder="Password" autocomplete="current-password" required>
       <button class="primary" type="submit">Enter Command Center</button>
     </form>
-    <small>Demo: admin@polarx.local / Admin@123</small>
+    <small>Sign in with your POLAR-X account.</small>
   </div>
 </div>
 
@@ -121,7 +121,7 @@
 
 
 <div id="modal" class="modal hidden"><div class="modal-card"><div class="modal-head"><h3 id="modalTitle"></h3><button id="closeModal">×</button></div><div id="modalBody"></div></div></div>
-<script src="/app.js?v=20261002-cloud"></script>
-<script>if("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js?v=20261002-cloud").catch(()=>{});</script>
+<script src="/app.js?v=20261002-cloud3"></script>
+<script>if("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js?v=20261002-cloud2").catch(()=>{});</script>
 </body>
 </html>
